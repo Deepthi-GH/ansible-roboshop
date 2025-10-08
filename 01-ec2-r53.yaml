@@ -7,7 +7,7 @@
     ZONE_ID: "Z10084241A7O0LJXGH49U"
     DOMAIN_NAME: "deepthi.cloud"
     instances:
-    - redis 
+    - mysql 
     
   
   tasks:
