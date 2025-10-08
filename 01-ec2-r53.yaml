@@ -7,7 +7,8 @@
     ZONE_ID: "Z10084241A7O0LJXGH49U"
     DOMAIN_NAME: "deepthi.cloud"
     instances:
-    - mongodb  
+    - mongodb 
+    - redis 
 
   tasks:
   - name: craete ec2 instances
@@ -25,7 +26,7 @@
     ansible.builtin.debug:
       msg: "{{ ec2_output }}"
 
-  - name: print private ip
-    ansible.builtin.debug:
-      msg: "{{ ec2_output.instances[0].private_ip_address}}"
+  # - name: print private ip
+  #   ansible.builtin.debug:
+  #     msg: "{{ ec2_output.instances[0].private_ip_address}}"
 
