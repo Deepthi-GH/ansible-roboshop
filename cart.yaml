@@ -29,8 +29,8 @@
 
   - name: Download the application code to created app directory.
     ansible.builtin.get_url: 
-      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
-      dest: /tmp/catalogue.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip 
+      dest: /tmp/cart.zip
 
   # - name: change directory
   #   ansible.builtin.command: 
@@ -39,7 +39,7 @@
 
   - name: unzip catalogue file  
     ansible.builtin.unarchive:
-      src: /tmp/catalogue.zip
+      src: /tmp/cart.zip
       dest: /app
       remote_src: yes 
 
@@ -47,7 +47,7 @@
     community.general.npm:
       path: /app
 
-  - name: setup catalogue service 
+  - name: setup cart service 
     ansible.builtin.copy:
-      src: catalogue.service
-      dest: /etc/systemd/system/catalogue.service
+      src: cart.service
+      dest: /etc/systemd/system/cart.service

@@ -82,6 +82,6 @@
   - name: enable and start catalogue
     ansible.builtin.package:
       name: catalogue
-      state: restarted
+      state: present
       enabled: yes
 
