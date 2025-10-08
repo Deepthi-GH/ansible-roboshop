@@ -18,4 +18,14 @@
     state: restarted
     enabled: yes
 
-- name: 
+- name: add user and set password
+  community.rabbitmq.rabbitmq_user:
+        user: roboshop 
+        password: roboshop123
+        permissions:
+          - vhost: /
+            configure_priv: ".*"
+            read_priv: ".*"
+            write_priv: ".*"
+        state: present
+   
