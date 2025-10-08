@@ -1,0 +1,93 @@
+- name: setup catalogue server
+  hosts: catalogue
+  become: true
+  tasks:
+  - name: disaable current module
+    ansible.builtin.command: dnf module disable nodejs -y
+
+  - name: enable current module
+    ansible.builtin.command: dnf module enable nodejs:20 -y
+
+  - name: install nodejs
+    ansible.builtin.package:
+      name: nodejs
+      state: present
+
+  - name: add system user roboshop
+    ansible.builtin.user:
+      name: roboshop
+      comment: roboshop system user
+      shell: /sbin/nologin
+      home: /app 
+      system: true
+
+  - name: setup app directory  
+    ansible.builtin.file:
+      path: /app
+      state: directory 
+      mode: '0755'
+
+  - name: Download the application code to created app directory.
+    ansible.builtin.get_url: 
+      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+      dest: /tmp/catalogue.zip
+
+  # - name: change directory
+  #   ansible.builtin.command: 
+  #   args:
+  #     chdir: /app
+
+  - name: unzip catalogue file  
+    ansible.builtin.unarchive:
+      src: /tmp/catalogue.zip
+      dest: /app
+      remote_src: yes 
+
+  - name: install dependencies
+    community.general.npm:
+      path: /app
+
+  - name: setup catalogue service 
+    ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+
+  - name: reload systemd daemons
+    ansible.builtin.systemd:
+      daemon_reload: yes
+
+  - name: setup mongodb repo
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: Install pymongo
+      pip:
+        name: pymongo
+        state: present
+
+  - name: install mongodb client
+    ansible.builtin.package:
+      name: mongodb-mongosh
+      state: present
+
+  - name: connect to mongodb catalogue
+    ansible.builtin.command: mongosh mongodb.deepthi.cloud --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')
+    register: catalogue_output
+
+  - name: print catalogue_output
+    ansible.builtin.debug:
+      msg: "{{ catalogue_output }}"
+
+  - name: load produts into mongodb
+    ansible.builtin.shell: mongosh --host mongodb.deepthi.cloud </app/db/master-data.js
+    when: catalogue_output.stdout | int < 0
+
+
+  - name: enable and start catalogue
+    ansible.builtin.pacakge:
+      name: catalogue
+      state: restarted
+      enabled: yes
+
+      
