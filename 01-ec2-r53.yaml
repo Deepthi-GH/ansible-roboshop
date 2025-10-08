@@ -7,8 +7,8 @@
     ZONE_ID: "Z10084241A7O0LJXGH49U"
     DOMAIN_NAME: "deepthi.cloud"
     instances:
-    - catalogue
-    - cart 
+    - mongodb
+    
     
   tasks:
   - name: craete ec2 instances
