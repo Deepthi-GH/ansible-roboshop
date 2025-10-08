@@ -80,7 +80,7 @@
 
 
   - name: enable and start catalogue
-    ansible.builtin.package:
+    ansible.builtin.service:
       name: catalogue
       state: present
       enabled: yes

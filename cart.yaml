@@ -1,5 +1,5 @@
-- name: setup catalogue server
-  hosts: catalogue
+- name: setup cart server
+  hosts: cart
   become: true
   tasks:
   - name: disaable current module
@@ -37,7 +37,7 @@
   #   args:
   #     chdir: /app
 
-  - name: unzip catalogue file  
+  - name: unzip cart file  
     ansible.builtin.unarchive:
       src: /tmp/cart.zip
       dest: /app
