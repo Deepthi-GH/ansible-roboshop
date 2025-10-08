@@ -8,7 +8,7 @@
     DOMAIN_NAME: "deepthi.cloud"
     instances:
     - mongodb 
-    - redis
+    # - redis
   
   tasks:
   - name: craete ec2 instances
@@ -26,12 +26,14 @@
     ansible.builtin.debug:
       msg: "{{ ec2_output }}"
 
-  # - name: print private ip
-  #   ansible.builtin.debug:
-  #     msg: "{{ ec2_output.instances[0].private_ip_address}}"
+  - name: print public ip
+    ansible.builtin.debug:
+      msg: "{{ item.instances[0].public_ip_address }}"
+    loop:  "{{ ec2_output.results }}"    
 
-  - name: print private IP with index
-    ansible.builtin.debug: 
-      msg: "Index: {{ loop.index0 }}, Private IP: {{ item.instances[0].private_ip_address }}"
-    loop: "{{ ec2_output.results }}"
+  - name: print private ip
+    ansible.builtin.debug:
+      msg: "{{ item.instances[0].private_ip_address }}"
+    loop:  "{{ ec2_output.results }}"
+
 
