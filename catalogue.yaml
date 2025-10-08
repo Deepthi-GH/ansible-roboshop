@@ -61,11 +61,6 @@
       src: mongo.repo
       dest: /etc/yum.repos.d/mongo.repo
 
-  - name: Install pymongo
-      pip:
-        name: pymongo
-        state: present
-
   - name: install mongodb client
     ansible.builtin.package:
       name: mongodb-mongosh
@@ -90,4 +85,3 @@
       state: restarted
       enabled: yes
 
-      
