@@ -32,11 +32,6 @@
       url: https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip 
       dest: /tmp/cart.zip
 
-  # - name: change directory
-  #   ansible.builtin.command: 
-  #   args:
-  #     chdir: /app
-
   - name: unzip cart file  
     ansible.builtin.unarchive:
       src: /tmp/cart.zip
@@ -51,3 +46,13 @@
     ansible.builtin.copy:
       src: cart.service
       dest: /etc/systemd/system/cart.service
+
+  - name: reload systemd daemons
+    ansible.builtin.systemd:
+      daemon_reload: yes   
+
+  - name: enable and start catalogue
+    ansible.builtin.service:
+      name: cart
+      state: restarted
+      enabled: yes  
