@@ -35,6 +35,7 @@
   #   ansible.builtin.debug:
   #     msg: "{{ item.instances[0].private_ip_address }}"
   #   loop:  "{{ ec2_output.results }}"
+
   - name: create route 53 records
     amazon.aws.route53:
         state: present  # Use 'present' to create or update
@@ -42,6 +43,17 @@
         record: "{{ item.item }}.{{ DOMAIN_NAME }}" #mongodb.deepthi.cloud
         type: A 
         value: "{{ item.instances[0].private_ip_address }}"
+        ttl: 1 
+        overwrite: true 
+    loop: "{{ ec2_output.results }}"
+
+  - name: create route 53 records for frontend
+    amazon.aws.route53:
+        state: present  # Use 'present' to create or update
+        zone: "{{ DOMAIN_NAME }}"
+        record: "{{ DOMAIN_NAME }}" #deepthi.cloud
+        type: A 
+        value: "{{ item.instances[0].public_ip_address }}"
         ttl: 1 
         overwrite: true 
     loop: "{{ ec2_output.results }}"
